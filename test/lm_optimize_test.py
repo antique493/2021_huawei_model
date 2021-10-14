@@ -43,6 +43,8 @@ def main():
     # 随机协方差矩阵
     d = np.random.rand(100,100)
     covariance = d+d.transpose()
+    print("data_input: ", data_input.shape)
+    print("data_output: ", data_output.shape)
     res_params, residual_memory = a.LM(params, data_input, data_output, covariance)
     print(res_params)
     a_est=res_params[0,0]
