@@ -12,15 +12,15 @@ def generate_data(params, num_data):
     # 产生包含噪声的数据
     x = np.array(np.linspace(0,10,num_data)).reshape(num_data,1)
     mid,sigma = 0,5
-    y = function(params,x) + np.random.normal(mid, sigma, num_data).reshape(num_data,1)
+    y = function(params, x, np.eye(x.shape[0])) + np.random.normal(mid, sigma, num_data).reshape(num_data,1)
     return x,y
 
-def function(params, input_data):
+def function(params, input_data, weight):
     a = params[0,0]
     b = params[1,0]
     #c = params[2,0]
     #d = params[3,0]
-    return a*np.exp(b*input_data)
+    return np.dot(weight, a*np.exp(b*input_data))
     #return a*np.sin(b*input_data[:,0])+c*np.cos(d*input_data[:,1])
         
 def main():
@@ -39,10 +39,14 @@ def main():
     # using LM algorithm estimate params
     
     a = lm_optimizer(function)
-    est_params, residual_memory = a.LM(params,data_input, data_output)
-    print(est_params)
-    a_est=est_params[0,0]
-    b_est=est_params[1,0]
+
+    # 随机协方差矩阵
+    d = np.random.rand(100,100)
+    covariance = d+d.transpose()
+    res_params, residual_memory = a.LM(params, data_input, data_output, covariance)
+    print(res_params)
+    a_est=res_params[0,0]
+    b_est=res_params[1,0]
 
     plt.scatter(data_input, data_output, color='b')
     # 生成0-10的共100个数据，然后设置间距为0.1
