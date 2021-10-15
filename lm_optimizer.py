@@ -24,28 +24,28 @@ class lm_optimizer(object):
     #calculating the derive of pointed parameter,whose shape is (num_data,1)
     # TODO: 这部分是可以进行改进的，最好可以写成公式偏导数
     # 计算数值偏导数
-    def cal_deriv(self, params, input_data, weight, param_index):
+    def cal_deriv(self, params, input_data, output_data, weight, param_index):
         params1 = params.copy()
         params2 = params.copy()
         params1[param_index,0] += 0.000001
         params2[param_index,0] -= 0.000001
-        data_est_output1 = self.function_(params1, input_data, weight)
-        data_est_output2 = self.function_(params2, input_data, weight)
+        data_est_output1 = self.function_(params1, input_data, output_data, weight)
+        data_est_output2 = self.function_(params2, input_data, output_data, weight)
         return (data_est_output1 - data_est_output2) / 0.000002
 
     #calculating jacobian matrix,whose shape is (num_data,num_params)
-    def cal_Jacobian(self, params, input_data, weight):
+    def cal_Jacobian(self, params, input_data, output_data, weight):
         num_params = np.shape(params)[0]
-        num_data = np.shape(input_data)[0]
+        num_data = np.shape(output_data)[0]
         J = np.zeros((num_data,num_params))
         for i in range(0,num_params):
-                J[:,i] = list(self.cal_deriv(params, input_data, weight, i))
+                J[:,i] = list(self.cal_deriv(params, input_data, output_data, weight, i))
         return J
 
     #calculating residual, whose shape is (num_data,1)
     def cal_residual(self, params, input_data, output_data, weight):
-        data_est_output = self.function_(params, input_data, weight)
-        residual = np.dot(weight, output_data) - data_est_output
+        data_est_output = self.function_(params, input_data, output_data, weight)
+        residual = 0 - data_est_output
         return residual
 
     #get the init u, using equation u=tao*max(Aii)
@@ -75,7 +75,7 @@ class lm_optimizer(object):
         #calculating the init residual
         residual = self.cal_residual(params, input_data, output_data, weight)
         #calculating the init Jocobian matrix
-        Jacobian = self.cal_Jacobian(params, input_data, weight)
+        Jacobian = self.cal_Jacobian(params, input_data, output_data, weight)
         
         A = Jacobian.T.dot(Jacobian)#calculating the init A
         g = Jacobian.T.dot(residual)#calculating the init gradient g
@@ -108,7 +108,7 @@ class lm_optimizer(object):
                         residual_memory.append(np.linalg.norm(residual)**2)
                         #print (np.linalg.norm(new_residual)**2)
                         #recalculating Jacobian matrix with new params
-                        Jacobian = self.cal_Jacobian(params,input_data, weight)
+                        Jacobian = self.cal_Jacobian(params,input_data, output_data, weight)
                         #recalculating A
                         A = Jacobian.T.dot(Jacobian)
                         #recalculating gradient g
@@ -119,6 +119,8 @@ class lm_optimizer(object):
                     else:
                         u = u*v
                         v = 2*v
+                # print("residual: ", residual)
+                # print("xyz: ", params[0:3])
                 if(rou > 0 or stop):
                     break;
         print("stop iter: ", k)

@@ -17,7 +17,7 @@ def least_square_res(input_data, output_data, max_iter=100):
         # (A^T P A)^-1 A^T P L
         result = np.dot(np.dot(np.dot(np.linalg.inv(np.dot(np.dot(A.transpose(), P), A)+0.5), A.transpose()), P), L)
         resdiual = abs(np.dot(A, result) - L)
-        print("resdiual: ", resdiual.mean())
+        # print("resdiual: ", resdiual.mean())
         # [X,1]
         if np.median(resdiual) == 0:
             U = resdiual/c/np.mean(resdiual)
@@ -27,7 +27,7 @@ def least_square_res(input_data, output_data, max_iter=100):
         W_U[abs(U)<=1] = ((1-U**2)**2)[abs(U)<=1]
         W_U[abs(U)>1] = 0
         P = np.diag(W_U[:,0])
-        print(P.mean())
+        # print(P.mean())
         iter += 1
     return result
 
