@@ -21,21 +21,23 @@ def read_files():
     estimate_results = []
     files = []
     for i in range(1,325):
-        files.append("数据集/data/正常数据清洗/"+str(i)+".正常.txt")
+        files.append("数据集/正常数据清洗/"+str(i)+".正常.txt")
     for file in files:
         with open(file,"r") as f:
             lines = f.readlines()[1:]
             file_results = [[],[],[],[]]
             for line in lines:
-                index = int(line.split()[0].split(":")[4])
-                distance  = int(line.split()[0].split(":")[5])
-                file_results[index].append(distance)
+                res = line.split(":")
+                for i in range(len(res)):
+                    file_results[i].append(int(res[i]))
             estimate_results.append(file_results)
             # print(file)
             # print(len(file_results[0]))
             # print(len(file_results[1]))
             # print(len(file_results[2]))
             # print(len(file_results[3]))
+
+    # [file, 4, N]
     return estimate_results
 
 
@@ -52,10 +54,6 @@ if __name__ == '__main__':
             distance_gt = ((tag - input_data/10)**2).sum(axis=1)**0.5*10
             
             pose = distances[i]
-            if i == 81:
-                # plt.scatter(pose[0], abs(pose[0]-distance_gt[0]))
-                # plt.show()
-                continue;
             x += pose[which]
             y += list((pose[which]-distance_gt[which]))
         

@@ -60,8 +60,8 @@ class lm_optimizer(object):
     #LM algorithm
     def LM(self, params, input_data, output_data, covariance):
         # input_data是输入, output_data是真值, covariance是协方差矩阵，应该和output_data的输入维度相同
-        assert covariance.shape[0] == covariance.shape[1]
-        assert output_data.shape[0] == covariance.shape[0]
+        # assert covariance.shape[0] == covariance.shape[1]
+        # assert output_data.shape[0] == covariance.shape[0]
 
         # 协方差矩阵是对称矩阵，进行正交分解 sigma = U*S*V, U = V^T
         # (f(x)-y)*sigma*(f(x)-y)^T = ((f(x)-y)*U*S**0.05) * ((f(x)-y)*U*S**0.05)^T
