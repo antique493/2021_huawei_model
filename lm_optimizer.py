@@ -122,8 +122,6 @@ class lm_optimizer(object):
                 # print("residual: ", residual)
                 # print("xyz: ", params[0:3])
                 if(rou > 0 or stop):
-                    break;
-        print("stop iter: ", k)
-            
+                    break;            
             
         return params, residual_memory
