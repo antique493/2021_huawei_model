@@ -56,7 +56,14 @@ if __name__ == '__main__':
             pose = distances[i]
             x += pose[which]
             y += list((pose[which]-distance_gt[which]))
-        
+
+        with open(str(which)+".txt", "w") as f:
+            for x_r in x:
+                f.write(str(x_r)+" ")
+            f.write("\n")
+            for x_r in y:
+                f.write(str(x_r)+" ")
+
         plt.scatter(x, y)
         plt.show()
 

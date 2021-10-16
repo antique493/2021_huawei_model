@@ -29,6 +29,10 @@ def readfile():
         for i in range(int(output_data_all.shape[0]/4)):
             global output_data
             output_data = output_data_all[i*4:i*4+4]
+            # output_data[0,0] -= 0.03037*output_data[0,0] - 146  
+            # output_data[1,0] -= 0.02067*output_data[1,0] - 115.8  
+            # output_data[2,0] -= 0.02342*output_data[2,0] - 138.6  
+            # output_data[3,0] -= 0.02822*output_data[3,0] - 161.2  
             final_res1 = np.zeros((3,1))
             final_res2 = np.zeros((3,1))
 
